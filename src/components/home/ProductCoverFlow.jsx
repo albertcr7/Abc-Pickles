@@ -50,6 +50,13 @@ export const ProductCoverFlow = ({ products = PRODUCTS }) => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [scrollProgressValue, setScrollProgressValue] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Extended Scroll Driven Motion for Beef Pickle Jar behind cards
   const { scrollYProgress } = useScroll({
@@ -384,51 +391,60 @@ export const ProductCoverFlow = ({ products = PRODUCTS }) => {
           const offset = index - activeIndex;
           const isActive = offset === 0;
 
-          // Determine transform & opacity based on distance from center active card
+          // Determine responsive transform & opacity based on distance from center active card & window width
+          const isMobileXS = windowWidth <= 420;
+          const isMobileSM = windowWidth <= 576;
+          const isMobileMD = windowWidth <= 768;
+          const isTablet = windowWidth <= 1024;
+
           let translateX = '0px';
           let translateY = '0px';
           let scale = 1;
           let opacity = 1;
           let zIndex = 1;
 
+          const step1 = isMobileXS ? '120px' : isMobileSM ? '145px' : isMobileMD ? '175px' : isTablet ? '210px' : '240px';
+          const step2 = isMobileXS ? '210px' : isMobileSM ? '250px' : isMobileMD ? '300px' : isTablet ? '360px' : '420px';
+          const step3 = isMobileXS ? '300px' : isMobileSM ? '350px' : isMobileMD ? '420px' : isTablet ? '480px' : '550px';
+
           if (isActive) {
             translateX = '0px';
             translateY = '0px';
-            scale = 1.08;
+            scale = isMobileXS ? 1.02 : 1.08;
             opacity = 1;
             zIndex = 20;
           } else if (offset === -1) {
-            translateX = '-240px';
-            translateY = '-35px';
-            scale = 0.82;
+            translateX = `-${step1}`;
+            translateY = isMobileXS ? '-15px' : '-35px';
+            scale = isMobileXS ? 0.78 : 0.82;
             opacity = 0.85;
             zIndex = 10;
           } else if (offset === 1) {
-            translateX = '240px';
-            translateY = '-35px';
-            scale = 0.82;
+            translateX = step1;
+            translateY = isMobileXS ? '-15px' : '-35px';
+            scale = isMobileXS ? 0.78 : 0.82;
             opacity = 0.85;
             zIndex = 10;
           } else if (offset === -2) {
-            translateX = '-420px';
-            translateY = '-35px';
+            translateX = `-${step2}`;
+            translateY = isMobileXS ? '-15px' : '-35px';
             scale = 0.7;
-            opacity = 0.55;
+            opacity = isMobileSM ? 0.2 : 0.55;
             zIndex = 5;
           } else if (offset === 2) {
-            translateX = '420px';
-            translateY = '-35px';
+            translateX = step2;
+            translateY = isMobileXS ? '-15px' : '-35px';
             scale = 0.7;
-            opacity = 0.55;
+            opacity = isMobileSM ? 0.2 : 0.55;
             zIndex = 5;
           } else if (offset < -2) {
-            translateX = '-550px';
+            translateX = `-${step3}`;
             translateY = '-35px';
             scale = 0.6;
             opacity = 0;
             zIndex = 1;
           } else if (offset > 2) {
-            translateX = '550px';
+            translateX = step3;
             translateY = '-35px';
             scale = 0.6;
             opacity = 0;
@@ -650,15 +666,39 @@ export const ProductCoverFlow = ({ products = PRODUCTS }) => {
 
       {/* Responsive Styles */}
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           .coverflow-stage {
-            height: 485px !important;
+            height: 480px !important;
           }
           .coverflow-stage > div {
             width: 230px !important;
           }
+        }
+        @media (max-width: 768px) {
+          .coverflow-stage {
+            height: 460px !important;
+          }
+          .coverflow-stage > div {
+            width: 210px !important;
+          }
           .coverflow-nav-btn {
             display: none !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .coverflow-stage {
+            height: 420px !important;
+          }
+          .coverflow-stage > div {
+            width: 185px !important;
+          }
+        }
+        @media (max-width: 360px) {
+          .coverflow-stage {
+            height: 400px !important;
+          }
+          .coverflow-stage > div {
+            width: 170px !important;
           }
         }
       `}</style>

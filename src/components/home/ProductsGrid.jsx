@@ -31,18 +31,9 @@ export const ProductsGrid = () => {
         />
 
         {/* Category Tabs & View Mode Filter Bar */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '16px',
-            marginBottom: '32px'
-          }}
-        >
+        <div className="products-grid-filter-bar">
           {/* Veg & Non-Veg Category Filter Tabs */}
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <div className="products-grid-categories">
             {categories.map((cat) => {
               const isActive = activeCategory === cat.id;
               const bg = cat.activeBg || 'var(--color-primary)';
@@ -50,19 +41,12 @@ export const ProductsGrid = () => {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
+                  className={`category-tab-btn ${isActive ? 'active' : ''}`}
                   style={{
-                    padding: '10px 22px',
-                    borderRadius: 'var(--radius-full)',
                     border: isActive ? `2px solid ${bg}` : '1px solid var(--color-border)',
                     backgroundColor: isActive ? bg : '#FFFFFF',
                     color: isActive ? '#FFFFFF' : 'var(--color-dark)',
-                    fontFamily: 'var(--font-button)',
-                    fontWeight: '700',
-                    fontSize: '0.9rem',
-                    letterSpacing: '0.5px',
-                    cursor: 'pointer',
-                    boxShadow: isActive ? `0 4px 14px ${bg}44` : 'var(--shadow-soft)',
-                    transition: 'all 0.3s ease'
+                    boxShadow: isActive ? `0 4px 14px ${bg}44` : 'var(--shadow-soft)'
                   }}
                 >
                   {cat.label}
@@ -72,29 +56,12 @@ export const ProductsGrid = () => {
           </div>
 
           {/* View Mode Switcher (3D Coverflow vs Grid) */}
-          <div
-            style={{
-              display: 'flex',
-              backgroundColor: '#FFFFFF',
-              borderRadius: 'var(--radius-full)',
-              padding: '4px',
-              border: '1px solid var(--color-border)',
-              boxShadow: 'var(--shadow-soft)'
-            }}
-          >
+          <div className="view-mode-switcher">
             <button
               onClick={() => setViewMode('coverflow')}
               style={{
-                padding: '8px 16px',
-                borderRadius: 'var(--radius-full)',
-                border: 'none',
                 backgroundColor: viewMode === 'coverflow' ? 'var(--color-dark)' : 'transparent',
-                color: viewMode === 'coverflow' ? 'var(--color-cream)' : '#666',
-                fontFamily: 'var(--font-button)',
-                fontWeight: '700',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
+                color: viewMode === 'coverflow' ? 'var(--color-cream)' : '#666'
               }}
             >
               3D Cover Flow 🎴
@@ -102,22 +69,77 @@ export const ProductsGrid = () => {
             <button
               onClick={() => setViewMode('grid')}
               style={{
-                padding: '8px 16px',
-                borderRadius: 'var(--radius-full)',
-                border: 'none',
                 backgroundColor: viewMode === 'grid' ? 'var(--color-dark)' : 'transparent',
-                color: viewMode === 'grid' ? 'var(--color-cream)' : '#666',
-                fontFamily: 'var(--font-button)',
-                fontWeight: '700',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
+                color: viewMode === 'grid' ? 'var(--color-cream)' : '#666'
               }}
             >
               Classic Grid ▦
             </button>
           </div>
         </div>
+
+        <style>{`
+          .products-grid-filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 32px;
+          }
+          .products-grid-categories {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+          }
+          .category-tab-btn {
+            padding: 10px 22px;
+            border-radius: var(--radius-full);
+            font-family: var(--font-button);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+          .view-mode-switcher {
+            display: flex;
+            background-color: #FFFFFF;
+            border-radius: var(--radius-full);
+            padding: 4px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-soft);
+          }
+          .view-mode-switcher button {
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            border: none;
+            font-family: var(--font-button);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+          @media (max-width: 600px) {
+            .products-grid-filter-bar {
+              justify-content: center;
+              gap: 12px;
+              margin-bottom: 20px;
+            }
+            .products-grid-categories {
+              justify-content: center;
+              gap: 6px;
+            }
+            .category-tab-btn {
+              padding: 8px 14px;
+              font-size: 0.8rem;
+            }
+            .view-mode-switcher button {
+              padding: 6px 12px;
+              font-size: 0.78rem;
+            }
+          }
+        `}</style>
 
         {/* Dynamic Display Component */}
         {viewMode === 'coverflow' ? (
